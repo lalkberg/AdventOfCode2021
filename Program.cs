@@ -13,7 +13,7 @@ namespace AdventOfCode2021
 
         static void Main()
         {
-            Day2();
+            Day3();
         }
 
         static void Day1()
@@ -119,6 +119,123 @@ namespace AdventOfCode2021
             result = horizontal * depth;
 
             Console.WriteLine($"Result of part two: {result}");
+            Console.ReadKey();
+        }
+
+        static void Day3()
+        {
+            input = GetInput(3);
+
+            int stringLength = input[0].Length;
+
+            string gamma = string.Empty;
+            string epsilon = string.Empty;
+
+            for (int i = 0; i < stringLength; i++)
+            {
+                int zeroes = 0;
+                int ones = 0;
+
+                for (int j = 0; j < input.Length; j++)
+                {
+                    int thisDigit = int.Parse(input[j][i].ToString());
+
+                    switch (thisDigit)
+                    {
+                        case 0:
+                            zeroes++;
+                            break;
+                        case 1:
+                            ones++;
+                            break;
+                        default:
+                            break;
+                    }
+                }
+
+                Console.WriteLine($"Total zeroes in row {i}: {zeroes}. Total ones in row {i}: {ones}.");
+
+                if (zeroes > ones)
+                {
+                    gamma += '0';
+                    epsilon += '1';
+                }
+                else
+                {
+                    gamma += '1';
+                    epsilon += '0';
+                }
+            }
+
+            Console.WriteLine($"Binary gamma rate: {gamma}. Binary epsilon rate: {epsilon}.");
+
+            int gammaInt = Convert.ToInt32(gamma, 2);
+            int epsilonInt = Convert.ToInt32(epsilon, 2);
+            int result = gammaInt * epsilonInt;
+
+            Console.WriteLine($"Gamma rate: {gammaInt}. Epsilon rate: {epsilonInt}.\nThe answer to Part 1 is {result}");
+
+            // Part 2
+
+            List<string> listToPrune = new List<string>(input);
+
+            for (int i = 0; i < stringLength; i++)
+            {
+                if (listToPrune.Count == 1) break;
+
+                int zeroes = 0;
+                int ones = 0;
+                int thisDigit = 0;
+
+                for (int j = 0; j < listToPrune.Count; j++)
+                {
+                    if (listToPrune[j][i] == '0') zeroes++;
+                    else ones++;
+                }
+
+                if (ones >= zeroes) thisDigit = 1;
+
+                List<string> predicateList = new List<string>(listToPrune.Where(x => char.GetNumericValue(x[i]) == thisDigit));
+
+                listToPrune = new List<string>(predicateList);
+            }
+
+            string oxygen = listToPrune[0];
+            Console.WriteLine($"Binary oxygen generator rating: {oxygen}.");
+
+            listToPrune = new List<string>(input);
+
+            for (int i = 0; i < stringLength; i++)
+            {
+                if (listToPrune.Count == 1) break;
+
+                int zeroes = 0;
+                int ones = 0;
+                int thisDigit = 0;
+
+                for (int j = 0; j < listToPrune.Count; j++)
+                {
+                    if (listToPrune[j][i] == '0') zeroes++;
+                    else ones++;
+                }
+
+                Console.WriteLine($"{i}: Ones = {ones}, Zeroes = {zeroes}.");
+
+                if (ones < zeroes) thisDigit = 1;
+
+                List<string> predicateList = new List<string>(listToPrune.Where(x => char.GetNumericValue(x[i]) == thisDigit));
+
+                listToPrune = new List<string>(predicateList);
+            }
+
+            string co2 = listToPrune[0];
+            Console.WriteLine($"Binary co2 scrubber rating: {co2}.");
+
+            int oxygenInt = Convert.ToInt32(oxygen, 2);
+            int co2Int = Convert.ToInt32(co2, 2);
+            result = oxygenInt * co2Int;
+
+            Console.WriteLine($"Oxygen generator rating: {oxygenInt}. CO2 scrubber rating: {co2Int}.\nThe answer to Part 2 is {result}");
             Console.ReadKey();
         }
 
